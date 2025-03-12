@@ -6,7 +6,7 @@ import uvicorn
 
 app = FastAPI(title="Student Application Testing System")
 
-# Pydantic Models
+
 class Student(BaseModel):
     id: int = Field(..., description="Unique identifier for the student")
     name: str = Field(..., min_length=2, max_length=50, description="Student's full name")
