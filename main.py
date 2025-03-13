@@ -31,24 +31,24 @@ tests: Dict[int, Test] = {}
 test_results: List[TestResult] = []
 
 @app.post("/students/", response_model=Student)
-async def create_student(student: Student):
+def create_student(student: Student):
     if student.id in students:
         raise HTTPException(status_code=400, detail="Student ID already exists")
     students[student.id] = student
     return student
 
 @app.get("/students/{student_id}", response_model=Student)
-async def get_student(student_id: int):
+def get_student(student_id: int):
     if student_id not in students:
         raise HTTPException(status_code=404, detail="Student not found")
     return students[student_id]
 
 @app.get("/students/", response_model=List[Student])
-async def get_all_students():
+def get_all_students():
     return list(students.values())
 
 @app.delete("/students/{student_id}", response_model=ResponseMessage)
-async def delete_student(student_id: int):
+def delete_student(student_id: int):
     if student_id not in students:
         raise HTTPException(status_code=404, detail="Student not found")
     del students[student_id]
@@ -56,24 +56,24 @@ async def delete_student(student_id: int):
 
 # Test Endpoints
 @app.post("/tests/", response_model=Test)
-async def create_test(test: Test):
+def create_test(test: Test):
     if test.id in tests:
         raise HTTPException(status_code=400, detail="Test ID already exists")
     tests[test.id] = test
     return test
 
 @app.get("/tests/{test_id}", response_model=Test)
-async def get_test(test_id: int):
+def get_test(test_id: int):
     if test_id not in tests:
         raise HTTPException(status_code=404, detail="Test not found")
     return tests[test_id]
 
 @app.get("/tests/", response_model=List[Test])
-async def get_all_tests():
+def get_all_tests():
     return list(tests.values())
 
 @app.post("/results/", response_model=TestResult)
-async def submit_test_result(result: TestResult):
+def submit_test_result(result: TestResult):
     if result.student_id not in students:
         raise HTTPException(status_code=404, detail="Student not found")
     if result.test_id not in tests:
@@ -86,19 +86,19 @@ async def submit_test_result(result: TestResult):
     return result
 
 @app.get("/results/student/{student_id}", response_model=List[TestResult])
-async def get_student_results(student_id: int):
+def get_student_results(student_id: int):
     if student_id not in students:
         raise HTTPException(status_code=404, detail="Student not found")
     return [result for result in test_results if result.student_id == student_id]
 
 @app.get("/results/test/{test_id}", response_model=List[TestResult])
-async def get_test_results(test_id: int):
+def get_test_results(test_id: int):
     if test_id not in tests:
         raise HTTPException(status_code=404, detail="Test not found")
     return [result for result in test_results if result.test_id == test_id]
 
 @app.get("/results/test/{test_id}/o'rtacha", response_model=float)
-async def get_test_average(test_id: int):
+def get_test_average(test_id: int):
     if test_id not in tests:
         raise HTTPException(status_code=404, detail="Test not found")
     test_scores = [result.score for result in test_results if result.test_id == test_id]
@@ -107,7 +107,7 @@ async def get_test_average(test_id: int):
     return statistics.mean(test_scores)
 
 @app.get("/results/test/{test_id}/eng_yuqori", response_model=int)
-async def get_test_highest(test_id: int):
+def get_test_highest(test_id: int):
     if test_id not in tests:
         raise HTTPException(status_code=404, detail="Test not found")
     test_scores = [result.score for result in test_results if result.test_id == test_id]
@@ -116,7 +116,7 @@ async def get_test_highest(test_id: int):
     return max(test_scores)
 
 @app.get("/results/test/{test_id}/eng_pasti", response_model=int)
-async def get_test_lowest(test_id: int):
+def get_test_lowest(test_id: int):
     if test_id not in tests:
         raise HTTPException(status_code=404, detail="Test not found")
     test_scores = [result.score for result in test_results if result.test_id == test_id]
